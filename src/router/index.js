@@ -54,7 +54,25 @@ export const constantRoutes = [
       meta: { title: 'Dashboard', icon: 'dashboard' }
     }]
   },
-
+  {
+    path: '/sms',
+    component: Layout,
+    redirect: '/sms/service',
+    children: [
+      {
+        path: 'service',
+        name: 'service',
+        component: () => import('@/views/sms-manage/service/index'),
+        meta: { title: 'service', icon: 'table' }
+      },
+      {
+        path: 'phones',
+        name: 'phones',
+        component: () => import('@/views/sms-manage/phones/index'),
+        meta: { title: 'phones', icon: 'tree' }
+      }
+    ]
+  },
   {
     path: '/example',
     component: Layout,

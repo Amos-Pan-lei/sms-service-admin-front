@@ -58,6 +58,8 @@ export const constantRoutes = [
     path: '/sms',
     component: Layout,
     redirect: '/sms/service',
+    name: 'sms',
+    meta: { title: 'Sms', icon: 'example' },
     children: [
       {
         path: 'service',

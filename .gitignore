@@ -6,7 +6,8 @@ yarn-debug.log*
 yarn-error.log*
 package-lock.json
 tests/**/coverage/
-
+buildAndDeploy.ps1
+deploy/
 # Editor directories and files
 .idea
 .vscode

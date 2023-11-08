@@ -1,16 +1,12 @@
 import request from '@/utils/request'
 
 export function getNumberList(params) {
-  return request({
-    url: '/sms/number/list',
-    method: 'get',
-    params
-  })
+  return request.post('/sms/allPrice', params)
 }
 
 export function getCountryList(params) {
-  return request({
-    url: '/sms/country/list',
+  return request.get({
+    url: '/sms/allCountry',
     method: 'get',
     params
   })
@@ -18,7 +14,7 @@ export function getCountryList(params) {
 
 export function getServiceList(params) {
   return request({
-    url: '/sms/server/list',
+    url: '/sms/allService',
     method: 'get',
     params
   })

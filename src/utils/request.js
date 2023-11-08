@@ -4,11 +4,14 @@ import store from '@/store'
 import { getToken } from '@/utils/auth'
 
 // create an axios instance
+
+// eslint-disable-next-line
+
 const service = axios.create({
-  headers: {'Authorization': 'Barer sk-ddd'},
+  crossDomain: true,
   baseURL: process.env.VUE_APP_BASE_API, // url = base url + request url
   // withCredentials: true, // send cookies when cross-domain requests
-  timeout: 5000 // request timeout
+  timeout: 60000 // request timeout
 })
 
 // request interceptor
@@ -20,7 +23,7 @@ service.interceptors.request.use(
       // let each request carry token
       // ['X-Token'] is a custom headers key
       // please modify it according to the actual situation
-      config.headers['X-Token'] = getToken()
+      config.headers['Authorization'] = getToken()
     }
     return config
   },

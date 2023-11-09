@@ -5,7 +5,7 @@ export function getNumberList(params) {
 }
 
 export function getCountryList(params) {
-  return request.get({
+  return request({
     url: '/sms/allCountry',
     method: 'get',
     params

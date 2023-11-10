@@ -1,7 +1,7 @@
 import request from '@/utils/request'
 
 export function getNumberList(params) {
-  return request.post('/sms/allPrice', params)
+  return request.post('/sms/allPricePage', params)
 }
 
 export function getCountryList(params) {

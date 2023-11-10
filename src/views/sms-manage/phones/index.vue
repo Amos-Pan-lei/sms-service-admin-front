@@ -5,7 +5,7 @@
     <el-form :inline="true" class="demo-form-inline" @submit.native.prevent>
 
       <el-form-item class="floatLeft">
-        <el-text style="margin-right: 10px;">服务选择</el-text>
+        服务选择
         <el-select
           v-model="chooseServiceCode"
           style="width: 250px;"
@@ -24,12 +24,12 @@
           @change="resetPageAndQuery"
         >
           <el-option v-for="item in serviceOptions" :key="item.code" :label="item.name" :value="item.code">
-            <el-text type="primary" style="float: left"> {{ item.name }} </el-text>
+            {{ item.name }}
           </el-option>
         </el-select>
       </el-form-item>
       <el-form-item class="floatLeft">
-        <el-text style="margin-right: 10px;">国家地区选择</el-text>
+        国家地区选择
         <el-select
           v-model="chooseCountryId"
           style="width: 250px;"
@@ -48,7 +48,7 @@
           @change="resetPageAndQuery"
         >
           <el-option v-for="item in countryOptions" :key="item.countryId" :label="item.countryName" :value="item.countryId">
-            <el-text type="primary" style="float: left"> {{ item.countryName }} </el-text>
+            {{ item.countryName }}
           </el-option>
 
         </el-select>
@@ -87,17 +87,21 @@
           <span>{{ scope.row.service.serviceCode }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="单价" width="110" align="center">
-        <template slot-scope="scope">
-          <span>{{ scope.row.service.costPrice }}</span>
-        </template>
-      </el-table-column>
       <el-table-column label="可购买数量" width="110" align="center">
         <template slot-scope="scope">
           <span>{{ scope.row.service.countPhoneNumbers }}</span>
         </template>
       </el-table-column>
-
+      <el-table-column label="单价" width="110" align="center">
+        <template slot-scope="scope">
+          <span>{{ scope.row.service.costPrice }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column label="操作" width="110" align="center">
+        <template slot-scope="scope">
+          <el-button type="primary" size="mini" @click="buyNumber(scope.row)">buy</el-button>
+        </template>
+      </el-table-column>
     </el-table>
     <!-- 分页 -->
     <el-pagination
@@ -116,7 +120,7 @@
 </template>
 
 <script>
-
+import { Message } from 'element-ui'
 import * as smsApi from '@/api/sms'
 import * as pingyin from '@/utils/pingyin'
 
@@ -189,17 +193,25 @@ export default {
         return
       }
       word = word.trim()
-      smsApi.getServiceList().then(res => {
-        this.serviceOptions = res.data.filter(e => e.name.toLowerCase().includes(word.toLowerCase()))
-      })
+      this.serviceOptions = smsApi.getServiceList().filter(e => e.name.toLowerCase().includes(word.toLowerCase()))
     },
     queryCountryOptions(word) {
       if (!word || !word.trim()) {
         return
       }
       word = word.trim()
-      smsApi.getCountryList().then(res => {
-        this.countryOptions = res.data.filter(e => pingyin.matchPingYing(e.countryName, word))
+      this.countryOptions = smsApi.getCountryList().filter(e => pingyin.matchPingYing(e.countryName, word))
+    },
+    buyNumber(row) {
+      smsApi.buyNumber({
+        countryId: row.country.countryId,
+        serviceCode: row.service.serviceCode
+      }).then(res => {
+        Message({
+          message: '购买成功',
+          type: 'success'
+        })
+        smsApi.queryBalance()
       })
     }
 

@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    sms-服务选择
+    激活的号码
     <el-table
       v-loading="listLoading"
       :data="list"
@@ -9,37 +9,73 @@
       fit
       highlight-current-row
     >
-      <!-- <el-table-column align="center" label="ID" width="95">
+
+      <el-table-column label="激活id">
         <template slot-scope="scope">
-          {{ scope.$index }}
-        </template>
-      </el-table-column> -->
-      <el-table-column label="code">
-        <template slot-scope="scope">
-          {{ scope.row.code }}
+          {{ scope.row.activationId }}
         </template>
       </el-table-column>
-      <el-table-column label="name" align="center">
+      <el-table-column label="服务编码" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.name }}</span>
+          <span>{{ scope.row.serviceCode }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="f" align="center">
+      <el-table-column label="电话号码" align="center">
         <template slot-scope="scope">
-          {{ scope.row.f }}
+          {{ scope.row.phoneNumber }}
         </template>
       </el-table-column>
-      <!--  <el-table-column class-name="status-col" label="Status" width="110" align="center">
+      <el-table-column label="费用" align="center">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.status | statusFilter">{{ scope.row.status }}</el-tag>
+          {{ scope.row.activationCost }}
         </template>
       </el-table-column>
-      <el-table-column align="center" prop="created_at" label="Display_time" width="200">
+      <el-table-column label="激活状态" align="center">
         <template slot-scope="scope">
-          <i class="el-icon-time" />
-          <span>{{ scope.row.display_time }}</span>
+          {{ scope.row.activationStatus }}
         </template>
-      </el-table-column> -->
+      </el-table-column>
+      <el-table-column label="sms编码" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.smsCode }}
+        </template>
+      </el-table-column>
+      <el-table-column label="短信内容" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.smsText }}
+        </template>
+      </el-table-column>
+      <el-table-column label="激活时间" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.activationTime }}
+        </template>
+      </el-table-column>
+      <el-table-column label="discount" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.discount }}
+        </template>
+      </el-table-column>
+      <el-table-column label="repeated" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.repeated }}
+        </template>
+      </el-table-column>
+      <el-table-column label="国家id" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.countryCode }}
+        </template>
+      </el-table-column>
+      <el-table-column label="国家" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.countryName }}
+        </template>
+      </el-table-column>
+      <el-table-column label="canGetAnotherSms" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.canGetAnotherSms }}
+        </template>
+      </el-table-column>
+
     </el-table>
   </div>
 </template>
@@ -59,7 +95,7 @@ export default {
   },
   data() {
     return {
-      list: null,
+      list: [],
       listLoading: true
     }
   },
@@ -69,7 +105,7 @@ export default {
   methods: {
     fetchData() {
       this.listLoading = true
-      smsApi.getServiceList().then(response => {
+      smsApi.currentActivations().then(response => {
         this.list = response.data
         this.listLoading = false
       })

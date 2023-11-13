@@ -26,11 +26,6 @@
           <span>{{ scope.row.serviceName }}</span>
         </template>
       </el-table-column>
-      <!-- <el-table-column label="国家id" align="center">
-        <template slot-scope="scope">
-          {{ scope.row.countryCode }}
-        </template>
-      </el-table-column> -->
       <el-table-column label="国家" align="center">
         <template slot-scope="scope">
           <el-avatar :size="25" :src="'https://smsactivate.s3.eu-central-1.amazonaws.com/assets/ico/country/'+scope.row.countryCode+'.svg'" />

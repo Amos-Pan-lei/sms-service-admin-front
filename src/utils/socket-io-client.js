@@ -2,7 +2,7 @@
 import { io } from 'socket.io-client'
 import { getToken } from '@/utils/auth'
 
-const socketServerHost = 'http://localhost:7741'
+const socketServerHost = window.location.hostname + ':7741'
 
 const loginOptions = {
   query: {
@@ -29,6 +29,6 @@ socket.on('disconnect', () => {
 export const setupSocetIoClient = () => {
   // initial connect
 
-  console.log('socketIo 初始化。。。。。')
+  console.log('--------- socketIo 初始化 ---------')
 }
 

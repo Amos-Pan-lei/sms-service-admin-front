@@ -123,7 +123,6 @@
 import { Message } from 'element-ui'
 import * as smsApi from '@/api/sms'
 import * as pingyin from '@/utils/pingyin'
-
 export default {
   filters: {
     statusFilter(status) {
@@ -137,7 +136,7 @@ export default {
   },
   data() {
     return {
-      chooseServiceCode: null,
+      chooseServiceCode: '',
       serviceOptions: [],
       chooseCountryId: null,
       countryOptions: [],
@@ -149,6 +148,9 @@ export default {
     }
   },
   created() {
+    this.serviceOptions = smsApi.getServiceList()
+    this.countryOptions = smsApi.getCountryList()
+    this.chooseServiceCode = 'dr'
     this.queryPage()
   },
   methods: {
@@ -178,13 +180,15 @@ export default {
         pageIndex: this.currentPage,
         pageSize: this.pageSize
       }).then(response => {
-        this.currentPage = response.data.pageIndex
-        this.pageSize = response.data.pageSize
-        this.total = response.data.totalCount
-        this.list = response.data.pageDatas
+        this.currentPage = response.pageIndex
+        this.pageSize = response.pageSize
+        this.total = response.totalCount
+        this.list = response.pageDatas
         if (this.list.length === 0) {
           this.currentPage = 0
         }
+        this.listLoading = false
+      }).catch(e => {
         this.listLoading = false
       })
     },
@@ -211,7 +215,7 @@ export default {
           message: '购买成功',
           type: 'success'
         })
-        smsApi.queryBalance()
+        smsApi.flushUserBalance()
       })
     }
 

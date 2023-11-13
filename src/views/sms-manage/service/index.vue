@@ -20,12 +20,29 @@
           <span>{{ scope.row.serviceCode }}</span>
         </template>
       </el-table-column>
+      <el-table-column label="服务" align="center">
+        <template slot-scope="scope">
+          <el-avatar :size="25" :src="'https://smsactivate.s3.eu-central-1.amazonaws.com/assets/ico/'+scope.row.serviceCode+'0.webp'" />
+          <span>{{ scope.row.serviceName }}</span>
+        </template>
+      </el-table-column>
+      <!-- <el-table-column label="国家id" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.countryCode }}
+        </template>
+      </el-table-column> -->
+      <el-table-column label="国家" align="center">
+        <template slot-scope="scope">
+          <el-avatar :size="25" :src="'https://smsactivate.s3.eu-central-1.amazonaws.com/assets/ico/country/'+scope.row.countryCode+'.svg'" />
+          {{ scope.row.countryName }}
+        </template>
+      </el-table-column>
       <el-table-column label="电话号码" align="center">
         <template slot-scope="scope">
           {{ scope.row.phoneNumber }}
         </template>
       </el-table-column>
-      <el-table-column label="费用" align="center">
+      <el-table-column label="费用" align="center" width="100">
         <template slot-scope="scope">
           {{ scope.row.activationCost }}
         </template>
@@ -45,32 +62,23 @@
           {{ scope.row.smsText }}
         </template>
       </el-table-column>
-      <el-table-column label="激活时间" align="center">
+      <el-table-column label="激活时间" align="center" width="200">
         <template slot-scope="scope">
-          {{ scope.row.activationTime }}
+          {{ new Date(scope.row.activationTime).toLocaleString() }}
         </template>
       </el-table-column>
-      <el-table-column label="discount" align="center">
+      <el-table-column label="discount" align="center" width="100">
         <template slot-scope="scope">
           {{ scope.row.discount }}
         </template>
       </el-table-column>
-      <el-table-column label="repeated" align="center">
+      <el-table-column label="repeated" align="center" width="100">
         <template slot-scope="scope">
           {{ scope.row.repeated }}
         </template>
       </el-table-column>
-      <el-table-column label="国家id" align="center">
-        <template slot-scope="scope">
-          {{ scope.row.countryCode }}
-        </template>
-      </el-table-column>
-      <el-table-column label="国家" align="center">
-        <template slot-scope="scope">
-          {{ scope.row.countryName }}
-        </template>
-      </el-table-column>
-      <el-table-column label="canGetAnotherSms" align="center">
+
+      <el-table-column label="canGetAnotherSms" align="center" width="100">
         <template slot-scope="scope">
           {{ scope.row.canGetAnotherSms }}
         </template>
@@ -106,7 +114,13 @@ export default {
     fetchData() {
       this.listLoading = true
       smsApi.currentActivations().then(response => {
-        this.list = response.data
+        this.list = response
+        this.list.forEach(e => {
+          e.countryName = smsApi.getCountryById(e.countryCode).countryName
+          e.serviceName = smsApi.getServiceByCode(e.serviceCode).name
+        })
+        this.listLoading = false
+      }).catch(e => {
         this.listLoading = false
       })
     }

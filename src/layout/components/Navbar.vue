@@ -4,7 +4,7 @@
 
     <breadcrumb class="breadcrumb-container" />
     <div class="right-menu">
-      <el-tag>余额 : {{ balance }}</el-tag>
+      <el-tag v-loading="listLoading" element-loading-spinner="el-icon-loading" element-loading-background="rgba(0, 0, 0, 0.8)">余额 : {{ balance }}</el-tag>
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
           <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
@@ -36,7 +36,7 @@ import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import * as smsApi from '@/api/sms'
-import { bus } from '@/utils/bus'
+import { bus, flushBalance } from '@/utils/bus'
 import { Message } from 'element-ui'
 
 export default {
@@ -46,7 +46,8 @@ export default {
   },
   data() {
     return {
-      balance: 0
+      balance: 0,
+      listLoading: false
     }
   },
   computed: {
@@ -57,15 +58,31 @@ export default {
   },
   created() {
     bus.$on('flush-balance', (data) => {
-      this.balance = data
-      Message({
-        message: '刷新余额',
-        type: 'success'
-      })
+      this.queryBalanceAndFlush()
     })
-    smsApi.queryBalance()
+    flushBalance()
+  },
+  onMounted() {
+
   },
   methods: {
+    queryBalanceAndFlush() {
+      this.listLoading = true
+      smsApi.queryBalance().then(res => {
+        this.balance = res.balance
+        this.listLoading = false
+        Message({
+          message: '刷新余额',
+          type: 'success'
+        })
+      }).catch(e => {
+        this.listLoading = false
+        Message({
+          message: '刷新余额失败',
+          type: 'error'
+        })
+      })
+    },
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },
